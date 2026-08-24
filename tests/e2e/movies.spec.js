@@ -8,10 +8,8 @@ test('deve cadastrar um novo filme', async ({ page }) => {
     const movie = data.guerra_mundial_z
     await executeSQL(`DELETE FROM public.movies WHERE title = '${movie.title}';`)
 
-    await page.login.visit()
-    await page.login.submit('admin@zombieplus.com', 'pwd123')
-    await page.login.isLoggedIn()
-
+    await page.login.do('admin@zombieplus.com', 'pwd123')
+    
     await page.movies.createMovie(movie.title, movie.overview, movie.release_year, movie.company)
     
     await page.toast.containText('Cadastro realizado com sucesso!')
@@ -19,9 +17,7 @@ test('deve cadastrar um novo filme', async ({ page }) => {
 
 test('não deve cadastrar quando campos obrigatórios estiverem vazios', async ({ page }) => {
 
-    await page.login.visit()
-    await page.login.submit('admin@zombieplus.com', 'pwd123')
-    await page.login.isLoggedIn()
+    await page.login.do('admin@zombieplus.com', 'pwd123')
 
     await page.movies.goForm()
     await page.movies.submit()
