@@ -1,6 +1,6 @@
 const { expect } = require('@playwright/test');
 
-export class LoginPage {
+export class Login {
 
     constructor(page) {
         this.page = page
@@ -21,5 +21,10 @@ export class LoginPage {
 
     async alertHaveText(target) {
         await expect(this.page.locator('span[class$=alert]')).toHaveText(target)
+    }
+
+    async isLoggedIn() {
+        await this.page.waitForLoadState('networkidle')
+        await expect(this.page).toHaveURL(/.*admin/)
     }
 }
