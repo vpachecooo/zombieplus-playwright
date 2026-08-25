@@ -14,14 +14,21 @@ export class Movies {
         await this.page.locator('button:has-text("Cadastrar")').click()
     }
 
-    async createMovie(title, overview, release_year, company) {
+    async create(movie) {
         await this.goForm()
-        await this.page.locator('input[name="title"]').fill(title)
-        await this.page.locator('textarea[name="overview"]').fill(overview)
+
+        await this.page.locator('input[name="title"]').fill(movie.title)
+        await this.page.locator('textarea[name="overview"]').fill(movie.overview)
+        
         await this.page.locator('#select_company_id .react-select__indicators').click()
-        await this.page.locator('.react-select__option').filter({ hasText: company }).click()
+        await this.page.locator('.react-select__option').filter({ hasText: movie.company }).click()
+
         await this.page.locator('#select_year .react-select__indicator').click()
-        await this.page.locator('.react-select__option').filter({ hasText: release_year }).click()
+        await this.page.locator('.react-select__option').filter({ hasText: movie.release_year }).click()
+
+        await this.page.locator('input[name=cover]')
+            .setInputFiles('tests/support/fixtures' + movie.cover)
+        
         await this.submit()
     }
 
