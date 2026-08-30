@@ -12,7 +12,8 @@ test('deve cadastrar um novo filme', async ({ page }) => {
     // await executeSQL(`DELETE FROM public.movies WHERE title = '${movie.title}';`)
     await page.login.do('admin@zombieplus.com', 'pwd123', 'Admin')
     await page.movies.create(movie)
-    await page.toast.containText('Cadastro realizado com sucesso!')
+    const message = `O filme '${movie.title}' foi adicionado ao catálogo.`
+    await page.popup.haveText(message)
 })
 
 test('não deve cadastrar quando o título já existir', async ({ page, request }) => {
@@ -21,17 +22,19 @@ test('não deve cadastrar quando o título já existir', async ({ page, request 
     await request.api.postMovie(movie)
     await page.login.do('admin@zombieplus.com', 'pwd123', 'Admin')
     await page.movies.create(movie)
-    await page.toast.containText('Este conteúdo já encontra-se cadastrado no catálogo')
+    const message = `O título '${movie.title}' já consta em nosso catálogo. Por favor, verifique se há necessidade de atualizações ou correções para este item.`
+    await page.popup.haveText(message)
 })
 
 test('não deve cadastrar quando campos obrigatórios estiverem vazios', async ({ page }) => {
     await page.login.do('admin@zombieplus.com', 'pwd123', 'Admin')
     await page.movies.goForm()
     await page.movies.submit()
+    const message = 'Campo obrigatório'
     await page.movies.alertHaveText([
-        'Por favor, informe o título.',
-        'Por favor, informe a sinopse.',
-        'Por favor, informe a empresa distribuidora.',
-        'Por favor, informe o ano de lançamento.'
+        message,
+        message,
+        message,
+        message
     ])
 })
