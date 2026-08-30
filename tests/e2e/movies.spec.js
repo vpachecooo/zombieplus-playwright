@@ -47,3 +47,14 @@ test('não deve cadastrar quando campos obrigatórios estiverem vazios', async (
         message
     ])
 })
+
+test('deve realizar busca pelo termo zumbi', async ({ page, request }) => {
+    const movies = data.search
+    movies.data.forEach(async (m) => {
+        await request.api.postMovie(m)
+    })
+    await page.login.do('admin@zombieplus.com', 'pwd123', 'Admin')
+    await page.movies.search(movies.input)
+    const rows = page.getByRole('row')
+    await expect(rows).toContainText(movies.outputs)
+})
