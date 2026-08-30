@@ -16,6 +16,15 @@ test('deve cadastrar um novo filme', async ({ page }) => {
     await page.popup.haveText(message)
 })
 
+test('deve poder remover um filme', async ({ page, request }) => {
+    const movie = data.a_noite_dos_mortos_vivos
+    await request.api.postMovie(movie)
+    await page.login.do('admin@zombieplus.com', 'pwd123', 'Admin')
+    await page.movies.remove(movie.title)
+    const message = `Filme removido com sucesso.`
+    await page.popup.haveText(message)
+})
+
 test('não deve cadastrar quando o título já existir', async ({ page, request }) => {
     const movie = data.resident_evil_o_hospedeiro
 
